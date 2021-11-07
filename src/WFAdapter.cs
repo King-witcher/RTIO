@@ -9,24 +9,51 @@ namespace RTIO
     {
         PictureBox outPictureBox = null;  // Será liberado somente pelo GC
 
+        #region Events
+
         public event Action<TimeSpan> OnUpdate;
-        public new event Action<Key> OnKeyDown;
-        public new event Action<Key> OnKeyUp;
-        public new event Action<(int x, int y)> OnMouseDown;
-        public new event Action<(int x, int y)> OnMouseUp;
-        public event Action OnFocus;
-        public event Action OnFocusOut;
+
+        public new event Action<Key> OnKeyDown
+        {
+            add => KeyDown += (_, args) => { value((Key)args.KeyCode); };
+            remove => KeyDown -= (_, args) => { value((Key)args.KeyCode); };
+        }
+
+        public new event Action<Key> OnKeyUp
+        {
+            add => KeyUp += (_, args) => { value((Key)args.KeyCode); };
+            remove => KeyUp -= (_, args) => { value((Key)args.KeyCode); };
+        }
+
+        public new event Action<(int x, int y)> OnMouseDown
+        {
+            add => MouseDown += (_, args) => { value((args.X, args.Y)); };
+            remove => MouseDown -= (_, args) => { value((args.X, args.Y)); };
+        }
+
+        public new event Action<(int x, int y)> OnMouseUp
+        {
+            add => MouseUp += (_, args) => { value((args.X, args.Y)); };
+            remove => MouseUp -= (_, args) => { value((args.X, args.Y)); };
+        }
+
+        public event Action OnFocus
+        {
+            add => outPictureBox.Click += (_, _) => value();
+            remove => outPictureBox.Click -= (_, _) => value();
+        }
+
+        public event Action OnFocusOut
+        {
+            add => LostFocus += (_, _) => value();
+            remove => LostFocus -= (_, _) => value();
+        }
+
+        #endregion
 
         public WFAdapater(System.Drawing.Image source)
         {
             InitializeComponent();
-
-            MouseDown += (_, args) => { OnMouseDown?.Invoke((args.X, args.Y)); };
-            MouseUp += (_, args) => { OnMouseUp?.Invoke((args.X, args.Y)); };
-            KeyDown += (_, args) => { OnKeyDown?.Invoke((Key)args.KeyCode); };
-            KeyUp += (_, args) => { OnKeyUp?.Invoke((Key)args.KeyCode); };
-            outPictureBox.Click += (_, _) => { OnFocus?.Invoke(); };
-            LostFocus += (_, _) => { OnFocusOut?.Invoke(); };
 
             Stopwatch rePaintStopwatch = new Stopwatch();
             outPictureBox.Paint += (_, _) =>

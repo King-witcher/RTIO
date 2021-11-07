@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RTIO
@@ -11,13 +12,51 @@ namespace RTIO
         WFAdapater window;
         System.Drawing.Image source;
 
-        public event Action<TimeSpan> OnUpdate;
-        public event Action<Key> OnKeyDown;
-        public event Action<Key> OnKeyUp;
-        public event Action<(int x, int y)> OnMouseDown;
-        public event Action<(int x, int y)> OnMouseUp;
-        public event Action OnFocus;
-        public event Action OnFocusOut;
+        #region Events
+
+        public event Action<TimeSpan> OnUpdate
+        {
+            add => window.OnUpdate += value;
+            remove => window.OnUpdate -= value;
+        }
+
+        public event Action<Key> OnKeyDown
+        {
+            add => window.OnKeyDown += value;
+            remove => window.OnKeyDown -= value;
+        }
+
+        public event Action<Key> OnKeyUp
+        {
+            add => window.OnKeyUp += value;
+            remove => window.OnKeyUp -= value;
+        }
+
+        public event Action<(int x, int y)> OnMouseDown
+        {
+            add => window.OnMouseDown += value;
+            remove => window.OnMouseDown -= value;
+        }
+
+        public event Action<(int x, int y)> OnMouseUp
+        {
+            add => window.OnMouseUp += value;
+            remove => window.OnMouseUp -= value;
+        }
+
+        public event Action OnFocus
+        {
+            add => window.OnFocus += value;
+            remove => window.OnFocus -= value;
+        }
+
+        public event Action OnFocusOut
+        {
+            add => window.OnFocusOut += value;
+            remove => window.OnFocusOut -= value;
+        }
+
+        #endregion
 
         public bool Maximized
         {
@@ -42,21 +81,12 @@ namespace RTIO
             window = new WFAdapater(source);
 
             Dimensions = (output.Width, output.Height);
-
-            // Setup events
-            window.OnUpdate += OnUpdate;
-            window.OnKeyDown += OnKeyDown;
-            window.OnKeyUp += OnKeyUp;
-            window.OnMouseDown += OnMouseDown;
-            window.OnMouseUp += OnMouseUp;
-            window.OnFocus += OnFocus;
-            window.OnFocusOut += OnFocusOut;
         }
 
-        public void Start()
+        public async void Start()
         {
-            OnFocus?.Invoke();
-            Application.Run(window);
+            Task.Run(() => Application.Run(window)).Wait();
+            Task.Run(() => Application.Run(window)).Wait();
         }
 
         public void Dispose()
