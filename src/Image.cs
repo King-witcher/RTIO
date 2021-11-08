@@ -138,6 +138,7 @@ namespace RTIO
             });
         }
 
+        /// <inheritdoc/>
         public void Dispose()
         {
             Marshal.FreeHGlobal(Scan0);

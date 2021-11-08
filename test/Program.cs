@@ -7,8 +7,6 @@ namespace RTIO_Test
 {
     static class Program
     {
-        static System.Action a;
-
         [STAThread]
         static void Main()
         {
