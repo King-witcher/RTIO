@@ -24,7 +24,7 @@ namespace RTIO_Test
             window.OnMouseUp += (pos) => { Console.WriteLine($"Mouse up at {pos}."); };
             window.OnUpdate += (_) => { image.Foreach((color) => new((byte)((color.R + 1) % 200), (byte)((color.G + 2) % 180), (byte)((color.B + 4) % 256))); };
 
-            window.Start();
+            window.Run();
         }
     }
 }

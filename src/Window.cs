@@ -10,74 +10,10 @@ namespace RTIO
     /// <summary>
     /// Representa uma janela capaz de exibir uma imagem em tempo real.
     /// </summary>
-    public partial class Window : IWindow, IDisposable
+    public partial class Window : BaseWindow, IDisposable
     {
-        WFAdapater window;
+        Form wrappedForm;
         Bitmap source;
-
-        #region Events
-
-        public event Action<TimeSpan> OnUpdate
-        {
-            add => window.OnUpdate += value;
-            remove => window.OnUpdate -= value;
-        }
-
-        public event Action<Key> OnKeyDown
-        {
-            add => window.OnKeyDown += value;
-            remove => window.OnKeyDown -= value;
-        }
-
-        public event Action<Key> OnKeyUp
-        {
-            add => window.OnKeyUp += value;
-            remove => window.OnKeyUp -= value;
-        }
-
-        public event Action<(int x, int y)> OnMouseDown
-        {
-            add => window.OnMouseDown += value;
-            remove => window.OnMouseDown -= value;
-        }
-
-        public event Action<(int x, int y)> OnMouseUp
-        {
-            add => window.OnMouseUp += value;
-            remove => window.OnMouseUp -= value;
-        }
-
-        public event Action OnFocus
-        {
-            add => window.OnFocus += value;
-            remove => window.OnFocus -= value;
-        }
-
-        public event Action OnFocusOut
-        {
-            add => window.OnFocusOut += value;
-            remove => window.OnFocusOut -= value;
-        }
-
-        #endregion
-
-        /// <summary>
-        /// Obtém ou define se a janela será maximizada.
-        /// </summary>
-        public bool Maximized
-        {
-            get => window.Maximized;
-            set => window.Maximized = value;
-        }
-
-        /// <summary>
-        /// Obtém ou define as dimensões internas da janela.
-        /// </summary>
-        public (int width, int height) Dimensions
-        {
-            get => window.Dimensions;
-            set => window.Dimensions = value;
-        }
 
         /// <summary>
         /// Obtém uma nova instância de Window.
@@ -91,25 +27,88 @@ namespace RTIO
                 output.Width * sizeof(uint), PixelFormat.Format32bppRgb,
                 (IntPtr)output.Uint0);
 
-            window = new WFAdapater(source);
+            wrappedForm = new Form(source);
 
             Dimensions = (output.Width, output.Height);
         }
 
-        /// <summary>
-        /// Abre a janela e toma o controle da thread atual.
-        /// </summary>
-        /// <remaks>
-        /// Window.Start() precisa estar funcionando na thread principal para que a janela seja exibida corretamente.
-        /// </remaks>
-        public async void Start()
+        #region Events
+
+        /// <inheritdoc/>
+        public override event Action<TimeSpan> OnUpdate
         {
-            Task.Run(() => Application.Run(window)).Wait();
+            add => wrappedForm.OnUpdate += value;
+            remove => wrappedForm.OnUpdate -= value;
         }
 
+        /// <inheritdoc/>
+        public override event Action<Key> OnKeyDown
+        {
+            add => wrappedForm.KeyDown += (_, args) => value((Key) args.KeyCode);
+            remove => wrappedForm.KeyDown -= (_, args) => value((Key)args.KeyCode);
+        }
+
+        /// <inheritdoc/>
+        public override event Action<Key> OnKeyUp
+        {
+            add => wrappedForm.KeyUp += (_, args) => value((Key)args.KeyCode);
+            remove => wrappedForm.KeyUp -= (_, args) => value((Key)args.KeyCode);
+        }
+
+        /// <inheritdoc/>
+        public override event Action<(int, int)> OnMouseDown
+        {
+            add => wrappedForm.MouseDown += (_, args) => value((args.X, args.Y));
+            remove => wrappedForm.MouseDown -= (_, args) => value((args.X, args.Y));
+        }
+
+        /// <inheritdoc/>
+        public override event Action<(int, int)> OnMouseUp
+        {
+            add => wrappedForm.MouseUp += (_, args) => value((args.X, args.Y));
+            remove => wrappedForm.MouseUp -= (_, args) => value((args.X, args.Y));
+        }
+
+        /// <inheritdoc/>
+        public override event Action OnFocus
+        {
+            add => wrappedForm.OnFocus += value;
+            remove => wrappedForm.OnFocus -= value;
+        }
+
+        /// <inheritdoc/>
+        public override event Action OnFocusOut
+        {
+            add => wrappedForm.OnFocusOut += value;
+            remove => wrappedForm.OnFocusOut -= value;
+        }
+
+        #endregion
+
+        /// <inheritdoc/>
+        public override bool Maximized
+        {
+            get => wrappedForm.Maximized;
+            set => wrappedForm.Maximized = value;
+        }
+
+        /// <inheritdoc/>
+        public override (int, int) Dimensions
+        {
+            get => wrappedForm.Dimensions;
+            set => wrappedForm.Dimensions = value;
+        }
+
+        /// <inheritdoc/>
+        public override void Run()
+        {
+            Task.Run(() => Application.Run(wrappedForm)).Wait();
+        }
+
+        /// <inheritdoc/>
         public void Dispose()
         {
-            window.Dispose();
+            wrappedForm.Dispose();
             source.Dispose();
         }
     }

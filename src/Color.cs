@@ -9,7 +9,6 @@ namespace RTIO
     [StructLayout(LayoutKind.Explicit)]
     public struct Color
     {
-        //Union
         [FieldOffset(0)] uint rgb;
 
         [FieldOffset(0)] byte b;
@@ -22,7 +21,7 @@ namespace RTIO
         /// </summary>
         /// <param name="red">A componente vermelha, de 0 a 255.</param>
         /// <param name="green">A componente verde, de 0 a 255.</param>
-        /// <param name="blue">A componente azul, de 0 a 255./param>
+        /// <param name="blue">A componente azul, de 0 a 255.</param>
         public Color(byte red, byte green, byte blue)
         {
             rgb = 0;

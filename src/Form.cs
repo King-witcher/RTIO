@@ -5,37 +5,13 @@ using System.Windows.Forms;
 
 namespace RTIO
 {
-    partial class WFAdapater : Form, IWindow, IDisposable
+    partial class Form : System.Windows.Forms.Form, IDisposable
     {
         PictureBox outPictureBox = null;  // Será liberado somente pelo GC
 
         #region Events
 
         public event Action<TimeSpan> OnUpdate;
-
-        public new event Action<Key> OnKeyDown
-        {
-            add => KeyDown += (_, args) => { value((Key)args.KeyCode); };
-            remove => KeyDown -= (_, args) => { value((Key)args.KeyCode); };
-        }
-
-        public new event Action<Key> OnKeyUp
-        {
-            add => KeyUp += (_, args) => { value((Key)args.KeyCode); };
-            remove => KeyUp -= (_, args) => { value((Key)args.KeyCode); };
-        }
-
-        public new event Action<(int x, int y)> OnMouseDown
-        {
-            add => MouseDown += (_, args) => { value((args.X, args.Y)); };
-            remove => MouseDown -= (_, args) => { value((args.X, args.Y)); };
-        }
-
-        public new event Action<(int x, int y)> OnMouseUp
-        {
-            add => MouseUp += (_, args) => { value((args.X, args.Y)); };
-            remove => MouseUp -= (_, args) => { value((args.X, args.Y)); };
-        }
 
         public event Action OnFocus
         {
@@ -51,7 +27,7 @@ namespace RTIO
 
         #endregion
 
-        public WFAdapater(System.Drawing.Image source)
+        public Form(System.Drawing.Image source)
         {
             InitializeComponent();
 
@@ -86,12 +62,12 @@ namespace RTIO
             }
         }
 
-        public (int width, int height) Dimensions
+        public (int Width, int Height) Dimensions
         {
             get => (ClientSize.Width, ClientSize.Height);
             set
             {
-                Size size = new Size(value.width, value.height);
+                Size size = new Size(value.Width, value.Height);
                 ClientSize = size;
             }
         }

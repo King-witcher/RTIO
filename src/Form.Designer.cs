@@ -3,11 +3,11 @@ namespace RTIO
 {
     // This is a complete cheat. I use a windows forms window with a PictureBox to render everything =]
     // Unfortunately that's the only practical way I know yet.
-    partial class WFAdapater
+    partial class Form
     {
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WFAdapater));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form));
             this.outPictureBox = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.outPictureBox)).BeginInit();
             this.SuspendLayout();
