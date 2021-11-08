@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace RTIO
 {
-    internal partial class WFAdapater : Form, IWindow, IDisposable
+    partial class WFAdapater : Form, IWindow, IDisposable
     {
         PictureBox outPictureBox = null;  // Será liberado somente pelo GC
 

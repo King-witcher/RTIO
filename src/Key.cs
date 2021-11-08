@@ -1,8 +1,12 @@
 ﻿
 namespace RTIO
 {
+    /// <summary>
+    /// Representa uma tecla do teclado.
+    /// </summary>
     public enum Key
     {
+        #pragma warning disable CS1591
         Modifiers = -65536,
         None = 0,
         LButton = 1,
@@ -197,5 +201,6 @@ namespace RTIO
         Shift = 65536,
         Control = 131072,
         Alt = 262144
+        #pragma warning restore
     }
 }

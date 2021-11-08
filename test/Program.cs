@@ -13,7 +13,7 @@ namespace RTIO_Test
         static void Main()
         {
             Image image = new(200, 300);
-            image.Foreach((_) => new Color(240, 240, 240));
+            image.Foreach((_) => new (240, 240, 240));
             Window window = new(image);
 
             window.OnKeyDown += (key) => { Console.WriteLine($"{key} is down."); };
